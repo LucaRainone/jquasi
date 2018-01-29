@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script type="text/javascript" src="../dist/jquasi.min.js"></script>
+    <style type="text/css">
+        .code {
+            display:none;
+            font-family: Courier new, monospace;
+            background-color: #efefef;
+            padding: 10px;
+            font-size: 10px;
+        }
+    </style>
+    <script type="text/javascript">
+        $(function() {
+            $('body')
+                .append(
+                    $('<span/>')
+                        .html("clicked")
+                        .attr("id","span_clicked")
+                        .attr("style","display:none")
+                )
+                .append(
+                    $('<a/>').attr("href","#").on('click', function() {
+                        $(this).remove();
+                        $('#span_clicked').attr("style","");
+                        return false;
+                    }).html("Simple link")
+                );
+        });
+
+        function escapeHtml(unsafe) {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+    </script>
+
+    <script type="text/javascript" id="script_example">
+
+        $(function() {
+
+            var $content = $('<div/>').addClass("content");
+
+            $content
+                .append($('<p/>').html("Page content is built with jquasi"))
+                .append(
+                    $('<button/>')
+                        .attr("type","button")
+                        .html("Click here for source code")
+                        .on('click', function() {
+                             $('pre.code')[0].style.display = "block";
+                        })
+                );
+
+            // get this code:
+            var $htmlCode = $('head').clone();
+            $htmlCode.find('meta,title').remove();
+
+            $('body')
+                .append($content)
+                .append(
+                    $('<pre/>')
+                        .addClass("code")
+                        .html(
+                            escapeHtml($htmlCode.html().trim())
+                        )
+                )
+                .on('click', 'pre', function() {
+                    this.style.backgroundColor = "#fff"
+                }
+                );
+
+        });
+    </script>
+</head>
+<body>
+
+</body>
+</html>
