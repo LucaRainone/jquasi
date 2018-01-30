@@ -230,4 +230,34 @@ function _test ($,jquery) {
             expect($body.find('.get-class').get(-1)).toBe($target[0]);
         })
     });
+
+    describe("test multiple elements", function() {
+        var $firstDiv, $secondDiv;
+        beforeEach(function () {
+            $('#test_container').remove();
+            $('body').append($('<div/>').attr("id","test_container"));
+            $firstDiv = $('<div/>');
+            $secondDiv = $('<div/>');
+            $('#test_container')
+                .append($firstDiv)
+                .append($secondDiv)
+                .append($('<div/>'))
+                .append($('<div/>'));
+        });
+        it("html(text) should write all div", function() {
+
+
+            $('#test_container').find("div").html("Hello");
+
+            expect($firstDiv.html()).toBe("Hello");
+            expect($secondDiv.html()).toBe("Hello");
+
+        });
+
+        it("html() should return only the content of the first", function() {
+            $firstDiv.html("Hello");
+            $secondDiv.html("World");
+            expect($('#test_container').find("div").html()).toBe("Hello")
+        })
+    });
 }

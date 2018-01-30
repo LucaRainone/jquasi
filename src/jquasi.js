@@ -113,8 +113,9 @@ define("jquasi", [], function () {
         if (a === undefined) {
             return this.data[0].innerHTML;
         }
-        this.data[0].innerHTML = a;
-        return this;
+        return this.each(function() {
+            this.innerHTML = a;
+        });
 
     };
 
