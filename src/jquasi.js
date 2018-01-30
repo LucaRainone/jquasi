@@ -1,82 +1,81 @@
 define("jquasi", [], function () {
 
+    function buildArrayFrom(el) {
+        var ret = [];
+        for(var i = 0; i < el.length; i++) ret.push(el[i]);
+        return ret;
+    }
+
+    var doc = document;
+
     var jquasi = function () {
+
         var data, i;
+
         if (this instanceof jquasi) {
             data = arguments[0];
-            if ('push' in data) {
-                this.data = data;
-            } else {
-                this.data = [data];
-            }
-            for (i = 0; i < this.data.length; i++) {
+
+            this.data = "push" in data? data : [data];
+
+            for (i = 0; i < this.data.length; i++)
                 this[i] = this.data[i];
-            }
+
             this.length = this.data.length;
+
             return;
         }
-        var a = arguments[0];
+        var arg1 = arguments[0];
 
-        if (a instanceof jquasi) {
-            var ret = [];
-            a.each(function() {
-                ret.push(this);
-            });
-            return $(ret);
-        }
-        if (typeof a === "string") {
-            a = a.trim();
-            if (a.substr(0, 1) === "<") {
-                var tag = a.substr(1, a.indexOf("/") - 1);
-                var el  = document.createElement(tag.toUpperCase());
-                return new jquasi(el);
+        if (arg1 instanceof jquasi)
+            return $(buildArrayFrom(arg1));
+
+        if (typeof arg1 === "string") {
+            arg1 = arg1.trim();
+            if (arg1.substr(0, 1) === "<") {
+                var tag = arg1.substr(1, arg1.indexOf("/") - 1);
+                return new jquasi(doc.createElement(tag.toUpperCase()));
             } else {
-                data    = [];
-                var nls = document.querySelectorAll(a);
-                for (i = 0; i < nls.length; i++) {
-                    data.push(nls[i]);
-                }
-                return new jquasi(data);
+
+                return new jquasi(buildArrayFrom(doc.querySelectorAll(arg1)));
             }
         }
-        if (a instanceof HTMLElement) {
-            return new jquasi(a);
+        if (arg1 instanceof HTMLElement) {
+            return new jquasi(arg1);
         }
 
-        if(typeof a === 'function') {
-            if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading"){
-                a();
+        if(typeof arg1 === 'function') {
+            if (doc.attachEvent ? doc.readyState === "complete" : doc.readyState !== "loading"){
+                arg1();
             } else {
-                document.addEventListener('DOMContentLoaded', a);
+                doc.addEventListener('DOMContentLoaded', arg1);
             }
         }
 
         // jQuery like object
-        if (a.hasOwnProperty("length")) {
-            var els = [];
-            for(i = 0; i < a.length; i++) {
-                els.push(a[i]);
+        if (arg1.hasOwnProperty("length")) {
 
-            }
-            return new jquasi(els);
+            return new jquasi(buildArrayFrom(arg1));
         }
 
     };
 
-    jquasi.prototype.each = function (cbk) {
+    jquasi.fn =jquasi.prototype;
+
+    jquasi.fn.each = function (cbk) {
         for (var i = 0; i < this.data.length; i++) {
             cbk.apply(this.data[i], [i]);
         }
+        return this;
     };
 
-    jquasi.prototype.addClass    = function (className) {
+    jquasi.fn.addClass    = function (className) {
         this.each(function () {
             this.className += " " + className + " ";
             this.className = this.className.trim();
         });
         return this;
     };
-    jquasi.prototype.removeClass = function (className) {
+    jquasi.fn.removeClass = function (className) {
         this.each(function () {
             var currentClassname = " " + this.className.split(" ").join("  ") + " ";
             this.className       = (currentClassname.split(" " + className + " ").join("  ").split("  ").join(" ")).trim();
@@ -87,20 +86,19 @@ define("jquasi", [], function () {
         return this;
     };
 
-    jquasi.prototype.hasClass = function(className) {
+    jquasi.fn.hasClass = function(className) {
           return this.data.length? this.data[0].className.match(new RegExp(className.split("-").join('\\-'))) : false;
     };
 
 
-    jquasi.prototype.toggleClass = function(className) {
-        this.each(function() {
+    jquasi.fn.toggleClass = function(className) {
+        return this.each(function() {
             var $this = jquasi(this);
-            $this.hasClass(className)? $this.removeClass(className) :$this.addClass(className);
+            $this.hasClass(className)? $this.removeClass(className) : $this.addClass(className);
         });
-        return this;
     };
 
-    jquasi.prototype.attr = function (attrName, attrValue) {
+    jquasi.fn.attr = function (attrName, attrValue) {
         if (attrValue === undefined) {
             return this.data[0].getAttribute(attrName);
         }
@@ -111,51 +109,47 @@ define("jquasi", [], function () {
         return this;
     };
 
-    jquasi.prototype.html = function (a) {
+    jquasi.fn.html = function (a) {
         if (a === undefined) {
             return this.data[0].innerHTML;
-        } else {
-            this.data[0].innerHTML = a;
-            return this;
         }
+        this.data[0].innerHTML = a;
+        return this;
+
     };
 
-    jquasi.prototype.append = function (a) {
+    jquasi.fn.append = function (a) {
         a = a instanceof jquasi ? a.get(0) : a;
         this.data[0].appendChild(a);
         return this;
     };
 
-    jquasi.prototype.clone = function () {
+    jquasi.fn.clone = function () {
         return new jquasi(this.get(0).cloneNode(true));
     };
 
-    jquasi.prototype.remove = function() {
-        this.each(function() {
+    jquasi.fn.remove = function() {
+        return this.each(function() {
             this.parentNode && this.parentNode.removeChild(this);
         });
     };
 
-    jquasi.prototype.empty = function () {
-        this.each(function () {
+    jquasi.fn.empty = function () {
+        return this.each(function () {
             this.innerHTML = "";
         });
-        return this;
     };
 
-    jquasi.prototype.find = function (a) {
+    jquasi.fn.find = function (a) {
         var data = [];
         this.each(function () {
-            var founds = this.querySelectorAll(a);
-            for (var i = 0; i < founds.length; i++) {
-                data.push(founds[i]);
-            }
+            data = data.concat(buildArrayFrom(this.querySelectorAll(a)));
         });
         return new jquasi(data);
     };
 
-    jquasi.prototype.get = function (index) {
-        return this.data[index];
+    jquasi.fn.get = function (index) {
+        return index>=0? this.data[index] : this.data[this.data.length+index];
     };
 
     var _buildEvent = function (ev) {
@@ -169,7 +163,7 @@ define("jquasi", [], function () {
         }
     };
 
-    jquasi.prototype.on = function (eventName, elOrCallback, callback) {
+    jquasi.fn.on = function (eventName, elOrCallback, callback) {
         var elementString;
 
         if (typeof elOrCallback === 'function') {
@@ -207,7 +201,7 @@ define("jquasi", [], function () {
                             break;
                         }
 
-                        if (currentEl === this || currentEl === document.body) {
+                        if (currentEl === this || currentEl === doc.body) {
                             break;
                         }
                         currentEl = currentEl.parentNode;
@@ -218,7 +212,7 @@ define("jquasi", [], function () {
         return this;
     };
 
-    jquasi.prototype.parent = function () {
+    jquasi.fn.parent = function () {
         return jquasi(this[0].parentNode)
     };
 

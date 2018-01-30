@@ -1,6 +1,6 @@
 define(['jquery','jquasi'], function(jquery, jquasi) {
     _test(jquasi, jquery);
-    _test(jquery,jquery);
+    _test(jquery, jquery);
 });
 
 function _test ($,jquery) {
@@ -213,6 +213,20 @@ function _test ($,jquery) {
             setTimeout(function() {
                 done();
             },100);
+        });
+
+        it("get() works", function() {
+            var $el = $('#myelement');
+            expect($el.get(0)).toBe($el[0]);
+            expect($el.get(-1)).toBe($el[0]);
+
+            var $body = $('body');
+            $body.append($('<div/>').addClass("get-class"));
+            $body.append($('<div/>').addClass("get-class"));
+            var $target = $('<div/>').addClass("get-class");
+            $body.append($target);
+
+            expect($body.find('.get-class').get(-1)).toBe($target[0]);
         })
     });
 }
