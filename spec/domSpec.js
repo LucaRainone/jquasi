@@ -19,11 +19,11 @@ function _test ($,jquery) {
     }
 
     describe("Check for base works", function () {
-
+        $('body').append($('<div/>').attr("id","test_container"));
         it("should be defined and create a div with a id", function () {
             $('#myelement').remove();
-            expect($).toBeDefined();
-            var $body = $('body');
+            var $body = $('#test_container');
+            document.body.appendChild($body[0])
             $body.append($('<div/>').attr("id", "myelement"));
 
             expect(document.getElementById("myelement")).not.toBeNull();
@@ -43,7 +43,9 @@ function _test ($,jquery) {
     describe("Check methods", function () {
 
         beforeEach(function () {
-            var $body = $('body');
+            $('#test_container').remove();
+            $('body').append($('<div/>').attr("id","test_container"));
+            var $body = $('#test_container');
             $body.find("div").remove();
             $('#myelement').remove();
             $body.append($('<div/>').attr("id", "myelement"));
@@ -92,11 +94,10 @@ function _test ($,jquery) {
 
         it("live listeners works", function (done) {
             var listener = jasmine.createSpy().and.callFake(function () {
-                expect(this).not.toBe(document.body);
                 expect(this).toBe(document.getElementById("myelement"));
                 done();
             });
-            var $body = $('body');
+            var $body = $('#test_container');
             expect($body.on('click','#myelement', listener)).toBe($body);
             click(document.getElementById("myelement"));
             expect(listener).toHaveBeenCalled();
@@ -106,9 +107,9 @@ function _test ($,jquery) {
             var listener = jasmine.createSpy().and.callFake(function () {
                 done();
             });
-            var $body = $('body');
+            var $body = $('#test_container');
             expect($body.on('click','#myelement', listener)).toBe($body);
-            click(document.body);
+            click(document.getElementById("test_container"));
             expect(listener).not.toHaveBeenCalled();
             setTimeout(function() {done()},200);
         });
@@ -117,7 +118,7 @@ function _test ($,jquery) {
             var listener = jasmine.createSpy().and.callFake(function () {
                 done();
             });
-            var $body = $('body');
+            var $body = $('#test_container');
             var $other = $('<div/>').attr("id","other_el");
             $body.append($other);
             expect($body.on('click','#myelement', listener)).toBe($body);
@@ -171,14 +172,14 @@ function _test ($,jquery) {
             var $parent = $el.parent();
             expect($parent instanceof $).toBeTruthy();
             expect($parent.length).toBe(1);
-            expect($parent[0]).toBe(document.body);
+            expect($parent[0]).toBe(document.getElementById("test_container"));
 
             var $newDiv = $('<div/>');
             $el.append($newDiv);
             var $parentEl = $newDiv.parent();
             expect($parentEl[0]).toBe($el[0]);
 
-            expect($newDiv.parent().parent()[0]).toBe(document.body)
+            expect($newDiv.parent().parent()[0]).toBe(document.getElementById("test_container"))
 
         });
 
@@ -220,7 +221,7 @@ function _test ($,jquery) {
             expect($el.get(0)).toBe($el[0]);
             expect($el.get(-1)).toBe($el[0]);
 
-            var $body = $('body');
+            var $body = $('#test_container');
             $body.append($('<div/>').addClass("get-class"));
             $body.append($('<div/>').addClass("get-class"));
             var $target = $('<div/>').addClass("get-class");

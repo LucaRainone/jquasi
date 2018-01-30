@@ -5,7 +5,7 @@ This is a tiny library for interact with DOM in jQuery syntax like
 
 I loved jQuery. Recent frameworks like React, Vuejs, Angularjs
 and so on, are nice and very performant. Vuejs, in its semplicity
-is another planet. I agree.
+is another planet.
 
 But sometimes we need just a simple click listener, 
 or create fews elements dinamically or do a document.ready.
