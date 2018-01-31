@@ -39,9 +39,9 @@ define("jquasi", [], function () {
                 return new jquasi(buildArrayFrom(doc.querySelectorAll(arg1)));
             }
         }
-        if (arg1 instanceof HTMLElement) {
+
+        if (arg1 instanceof HTMLElement)
             return new jquasi(arg1);
-        }
 
         if(typeof arg1 === 'function') {
             if (doc.attachEvent ? doc.readyState === "complete" : doc.readyState !== "loading"){
@@ -51,20 +51,19 @@ define("jquasi", [], function () {
             }
         }
 
-        // jQuery like object
-        if (arg1.hasOwnProperty("length")) {
-
+        // jQuery-like object
+        if (arg1.hasOwnProperty("length"))
             return new jquasi(buildArrayFrom(arg1));
-        }
 
     };
 
     jquasi.fn =jquasi.prototype;
 
     jquasi.fn.each = function (cbk) {
-        for (var i = 0; i < this.data.length; i++) {
+
+        for (var i = 0; i < this.data.length; i++)
             cbk.apply(this.data[i], [i]);
-        }
+
         return this;
     };
 
@@ -75,13 +74,16 @@ define("jquasi", [], function () {
         });
         return this;
     };
+
     jquasi.fn.removeClass = function (className) {
         this.each(function () {
+
             var currentClassname = " " + this.className.split(" ").join("  ") + " ";
             this.className       = (currentClassname.split(" " + className + " ").join("  ").split("  ").join(" ")).trim();
-            if (this.className === "") {
+
+            if (this.className === "")
                 this.removeAttribute("class");
-            }
+
         });
         return this;
     };
@@ -99,9 +101,10 @@ define("jquasi", [], function () {
     };
 
     jquasi.fn.attr = function (attrName, attrValue) {
-        if (attrValue === undefined) {
+
+        if (attrValue === undefined)
             return this.data[0].getAttribute(attrName);
-        }
+
         this.each(function () {
             this.setAttribute(attrName, attrValue);
         });
@@ -110,9 +113,10 @@ define("jquasi", [], function () {
     };
 
     jquasi.fn.html = function (a) {
-        if (a === undefined) {
+
+        if (a === undefined)
             return this.data[0].innerHTML;
-        }
+
         return this.each(function() {
             this.innerHTML = a;
         });
@@ -186,10 +190,7 @@ define("jquasi", [], function () {
             this.each(function () {
                 this.addEventListener(eventName, function (ev) {
                     var $els = jquasi(this).find(elementString);
-                    var els  = [];
-                    $els.each(function () {
-                        els.push(this);
-                    });
+                    var els  = buildArrayFrom($els);
                     var currentEl = ev.target;
 
                     while (currentEl) {
