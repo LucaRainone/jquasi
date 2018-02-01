@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/LucaRainone/jquasi.svg?branch=master)](https://travis-ci.org/LucaRainone/jquasi)
+
 ## What
 This is a tiny library for interact with DOM in jQuery syntax like
 
