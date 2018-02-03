@@ -5,22 +5,9 @@ This is a tiny library for interact with DOM in jQuery syntax like
 
 ## Why
 
-I loved jQuery. Recent frameworks like React, Vuejs, Angularjs
-and so on, are nice and very performant. Vuejs, in its semplicity
-is another planet.
-
-But sometimes we need just a simple click listener, 
-or create fews elements dinamically or do a document.ready.
-We don't need a framework for this, or a superhero
-library like jQuery. 
-Yes. There are beautiful sites like http://youmightnotneedjquery.com/
-that help us a lot.
-
-But jQuery has a very lovable syntax:
-chained methods, multiple HtmlElement managment, toggle class.
-
-It's sad to leave all this if we don't want to load 80kb
-of library for few line of codes.
+I love jQuery. But sometimes I need only to do few things
+in a chainable|comfortable syntax. Frameworks like Angular, React or Vuejs may be
+oversized for a simple page with poor interactivity.
 
 Here jquasi might help us. You can do something like this:
 
@@ -58,4 +45,58 @@ The `spec` folder contains test that run both with jquery and jquasi.
 ## Where
 
 In `dist` folder you have the minified version (3k).
+
+## API
+
+The API is a subset of the jQuery API.
+
+- ready: `$(function() {/* document is ready now */})`
+- create: `$('<div/>)`
+- selectos: `$('.classname[attr="value"])`. This use the `document.querySelectorAll` 
+- each: `$('div').each(function() {console.log(this)})`
+- (add|remove|toggle|has)Class `$('div').addClass("class-for-all-div")`
+- attr: `$('div').attr("data-attr", "value")`
+- `.html()`
+- append: `$('body').append($('<div/>'))`
+- parent: `$('.my-div').parent().parent()`
+- remove, clone, empty
+- `get()`
+- `find()`
+- listeners `$('body').on('click',function() {})`
+- live listeners: `$('body').on('click','.only-this',function() {})`
+- `.fn` as `prototype` shortcut
+
+<strike>`.css()`</strike> is not available because it's hard to do it in
+jquery compatibility (it do a lot of things)
+
+This API is a good compromise for lightness and powerfull.
+
+## Contribute
+I would to leave this library as tiny as possible and jquery compatible.
+
+Fixes are welcome.
+
+Clone this repo and do:
+
+`npm install`
+
+it will download all what you need for compile and test sources inside `src` folder.
+
+`npm test` for test (using chrome headless)
+
+`npm run-script build` for minify.
+
+If you want to add some method, unless it's one-line method, don't add it here
+but implement it in your project.
+
+Here some helpful half-compatible implementations
+```
+$.fn.css = function(attr, value) {
+    return this.each(function() { 
+        this.style[attr] = value;
+    });
+}
+
+$('div').css("backgroundColor","red");
+```
 
