@@ -1,4 +1,10 @@
 module.exports = function(config) {
+
+    var reporters = ['progress', 'coverage'];
+
+    if(process.env.SENDCOVERALLS)
+        reporters.push('coveralls');
+
     config.set({
         basePath:'',
         frameworks: [ 'jasmine','requirejs'],
@@ -23,7 +29,7 @@ module.exports = function(config) {
                 { type: 'lcov', subdir: 'report-lcov' }
             ]
         },
-        reporters: ['progress', 'coverage', 'coveralls'],
+        reporters: reporters,
         port: 9876,  // karma web server port
         colors: true,
         logLevel: config.LOG_INFO,
