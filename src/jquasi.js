@@ -149,7 +149,7 @@ define("jquasi", [], function () {
     };
 
     jquasi.fn.get = function (index) {
-        return index>=0? this.data[index] : this.data[this.data.length+index];
+        return index>=0? this.data[index] : this.data[this.length+index];
     };
 
     var _buildEvent = function (ev) {
@@ -171,14 +171,18 @@ define("jquasi", [], function () {
         else
             elementString = elOrCallback;
 
+        var callAndCheckPropagationAndDefault = function(el, ev) {
+            // in callback, return false means both stopPropagation and preventDefault
+            if(callback.call(el, _buildEvent(ev)) === false) {
+                ev.stopPropagation();
+                ev.preventDefault();
+            }
+        };
+
         if (elementString === undefined) {
             this.each(function () {
                 this.addEventListener(eventName, function (ev) {
-                    // in callback, return false means both stopPropagation and preventDefault
-                    if(callback.call(this, _buildEvent(ev)) === false) {
-                        ev.stopPropagation();
-                        ev.preventDefault();
-                    }
+                    callAndCheckPropagationAndDefault(this,ev);
                 });
             });
         } else {
@@ -192,10 +196,7 @@ define("jquasi", [], function () {
                     while (currentEl) {
 
                         if (els.indexOf(currentEl) !== -1) {
-                            if(callback.apply(currentEl, [_buildEvent(ev)]) === false) {
-                                ev.stopPropagation();
-                                ev.preventDefault();
-                            }
+                            callAndCheckPropagationAndDefault(currentEl,ev);
                             break;
                         }
 

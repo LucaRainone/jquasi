@@ -23,7 +23,7 @@ function _test ($,jquery) {
         it("should be defined and create a div with a id", function () {
             $('#myelement').remove();
             var $body = $('#test_container');
-            document.body.appendChild($body[0])
+            document.body.appendChild($body[0]);
             $body.append($('<div/>').attr("id", "myelement"));
 
             expect(document.getElementById("myelement")).not.toBeNull();
@@ -214,6 +214,23 @@ function _test ($,jquery) {
             setTimeout(function() {
                 done();
             },100);
+            click($el[0]);
+        });
+
+        it("return false on listener should works", function(done) {
+            var $el =$('#myelement');
+            var listener = jasmine.createSpy().and.callFake(function () {
+                done();
+            });
+            $el.on('click', function() {
+                return false
+            });
+            document.body.addEventListener('click', listener);
+            expect(listener).not.toHaveBeenCalled();
+            setTimeout(function() {
+                done();
+            },100);
+            click($el[0]);
         });
 
         it("get() works", function() {
