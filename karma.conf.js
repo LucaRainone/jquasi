@@ -13,7 +13,7 @@ module.exports = function(config) {
             'src/**/*.js': ['coverage']
         },
         plugins: ['karma-jasmine',
-            'karma-coverage', 'karma-requirejs','karma-chrome-launcher'],
+            'karma-coverage', 'karma-requirejs','karma-chrome-launcher', 'karma-coveralls'],
         coverageReporter: {
             includeAllSources: true,
             dir: 'coverage/',
@@ -23,7 +23,7 @@ module.exports = function(config) {
                 { type: 'lcov', subdir: 'report-lcov' }
             ]
         },
-        reporters: ['progress', 'coverage'],
+        reporters: ['progress', 'coverage', 'coveralls'],
         port: 9876,  // karma web server port
         colors: true,
         logLevel: config.LOG_INFO,
