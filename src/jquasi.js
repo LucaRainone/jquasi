@@ -61,7 +61,7 @@ define("jquasi", [], function () {
 
     jquasi.fn.each = function (cbk) {
 
-        for (var i = 0; i < this.data.length; i++)
+        for (var i = 0; i < this.length; i++)
             cbk.apply(this.data[i], [i]);
 
         return this;
@@ -77,19 +77,14 @@ define("jquasi", [], function () {
 
     jquasi.fn.removeClass = function (className) {
         this.each(function () {
-
-            var currentClassname = " " + this.className.split(" ").join("  ") + " ";
-            this.className       = (currentClassname.split(" " + className + " ").join("  ").split("  ").join(" ")).trim();
-
-            if (this.className === "")
-                this.removeAttribute("class");
-
+            this.className = (" " + this.className.split(" ").join("  ") + " ")
+                .split(" " + className + " ").join("  ").replace(/\s+/," ").trim();
         });
         return this;
     };
 
     jquasi.fn.hasClass = function(className) {
-          return this.data.length? this.data[0].className.match(new RegExp(className.split("-").join('\\-'))) : false;
+          return this.length? this.data[0].className.match(new RegExp(className.split("-").join('\\-'))) : false;
     };
 
 
@@ -171,15 +166,16 @@ define("jquasi", [], function () {
     jquasi.fn.on = function (eventName, elOrCallback, callback) {
         var elementString;
 
-        if (typeof elOrCallback === 'function') {
+        if (typeof elOrCallback === 'function')
             callback = elOrCallback;
-        } else {
+        else
             elementString = elOrCallback;
-        }
+
         if (elementString === undefined) {
             this.each(function () {
                 this.addEventListener(eventName, function (ev) {
-                    if(callback.apply(this, [_buildEvent(ev)]) === false) {
+                    // in callback, return false means both stopPropagation and preventDefault
+                    if(callback.call(this, _buildEvent(ev)) === false) {
                         ev.stopPropagation();
                         ev.preventDefault();
                     }

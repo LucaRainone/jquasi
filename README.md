@@ -86,6 +86,9 @@ it will download all what you need for compile and test sources inside `src` fol
 
 `npm run-script build` for minify.
 
+For testing in your favourite browser, open the `spec/standalon/SpecRunner.html` file
+in it after `npm install`
+
 If you want to add some method, unless it's one-line method, don't add it here
 but implement it in your project.
 
