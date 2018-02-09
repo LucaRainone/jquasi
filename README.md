@@ -2,16 +2,16 @@
 [![Coverage Status](https://coveralls.io/repos/github/LucaRainone/jquasi/badge.svg?branch=master)](https://coveralls.io/github/LucaRainone/jquasi?branch=master)
 
 ## What
-This is a tiny library for interact with DOM in jQuery syntax like
+
+This is a tiny (3kB minified) library to interact with the DOM using a jQuery-like syntax
 
 ## Why
 
-I love jQuery. But sometimes I need only to do few things
-in a chainable|comfortable syntax. Frameworks like Angular, React or Vuejs may be
-oversized for a simple page with poor interactivity.
+I love jQuery. But sometimes I only need to do a few things
+using a chainable|comfortable syntax. Frameworks like Angular, React or Vuejs may be
+oversized for a simple page with little interactivity.
 
-Here jquasi might help us. You can do something like this:
-
+In this case jquasi might help. With this **3kB** library ou can do something like this:
 
 ```
 
@@ -30,24 +30,18 @@ $(function() {
 });
 
 ```
-with this 3kb library.
 
-Of course there are a lot of limitations: if you need to do
-something of complex without worry
-about them, then it's better to don't leave jQuery
-(and maybe to learn Vuejs or React :)). 
+Of course jquasi is not a complete replacement of jQuery, but
+a subset with a compatible syntax/API. So you can start your project with jquasi
+and later - if you miss some features -
+switch to jQuery without changing anything in your code!
 
-The fine part is that you can start your project with jquasi
-and only if you understand that you need something of more complex,
-you can switch to jquery without change anything of your code.
+## Repository structure
 
-The `spec` folder contains test that run both with jquery and jquasi.
+- The `spec` folder contains tests that work with both jQuery and jquasi.
+- The `dist` folder contains the minified version (3k) of jquasi.
 
-## Where
-
-In `dist` folder you have the minified version (3k).
-
-## API
+## API / supported features
 
 The API is a subset of the jQuery API.
 
@@ -66,34 +60,16 @@ The API is a subset of the jQuery API.
 - listeners `$('body').on('click',function() {})`
 - live listeners: `$('body').on('click','.only-this',function() {})`
 - `.fn` as `prototype` shortcut
+- <strike>`.css()`</strike> is not available because it would be hard to keep jquery
+compatibility without making the library much bigger
 
-<strike>`.css()`</strike> is not available because it's hard to do it in
-jquery compatibility (it do a lot of things)
+This API is a good balance of lightness and power.
 
-This API is a good compromise for lightness and powerfull.
+## Extending jquasi / adding missing functionalities
 
-## Contribute
-I would to leave this library as tiny as possible and jquery compatible.
+If you are missing just a few methods and don't want to switch from jquasi to jQuery, 
+you can extend jquasi within your project as shown in this example:
 
-Fixes are welcome.
-
-Clone this repo and do:
-
-`npm install`
-
-it will download all what you need for compile and test sources inside `src` folder.
-
-`npm test` for test (using chrome headless)
-
-`npm run-script build` for minify.
-
-For testing in your favourite browser, open the `spec/standalon/SpecRunner.html` file
-in it after `npm install`
-
-If you want to add some method, unless it's one-line method, don't add it here
-but implement it in your project.
-
-Here some helpful half-compatible implementations
 ```
 $.fn.css = function(attr, value) {
     return this.each(function() { 
@@ -104,3 +80,30 @@ $.fn.css = function(attr, value) {
 $('div').css("backgroundColor","red");
 ```
 
+## Contributing
+
+Fixes and contributions are welcome. 
+
+If you wrote an extension in your project and believe it could be of general interest,
+feel free to open a Pull Request to discuss its inclusion in the main project.
+
+Consider that this library must remain jquery compatible **and** as small as possible.
+
+### To set up the development environment, clone this repo and run:
+
+`npm install`
+
+to download all dependencies needed for compilation and testing inside the `src` folder.
+
+### To test your changes run:
+
+`npm test` 
+
+to run the tests using chrome headless **OR** open the `spec/standalone/SpecRunner.html` file with your favourite browser.
+
+If you are adding new functionalities, please write the corresponding tests as well.
+
+
+### To create the minified version of jquasi run:
+
+`npm run-script build` 
