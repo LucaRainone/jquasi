@@ -1,17 +1,21 @@
 {
   "name": "jquasi",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/LucaRainone/jquasi"
   },
   "description": "A very tiny jquery-syntax-like library for DOM manipulation and listeners",
-  "keywords": ["dom","javascript","browser"],
+  "keywords": [
+    "dom",
+    "javascript",
+    "browser"
+  ],
   "scripts": {
     "test": "karma start --single-run --browsers ChromeHeadless karma.conf.js",
     "build": "node cutdefine.js | node_modules/.bin/uglifyjs -o dist/jquasi.min.js --compress --mangle --comments=/@license/ -"
   },
-  "main":"dist/jquasi.min.js",
+  "main": "dist/jquasi.min.js",
   "author": "Luca Rainone",
   "license": "MIT",
   "devDependencies": {
