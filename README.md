@@ -11,7 +11,7 @@ I love jQuery. But sometimes I only need to do a few things
 using a chainable|comfortable syntax. Frameworks like Angular, React or Vuejs may be
 oversized for a simple page with little interactivity.
 
-In this case jquasi might help. With this **3kB** library ou can do something like this:
+In this case jquasi might help. With this **3kB** library you can do something like this:
 
 ```
 
