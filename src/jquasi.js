@@ -76,8 +76,9 @@ define("jquasi", [], function () {
 
     jquasi.fn.removeClass = function (className) {
         this.each(function () {
-            this.className = (" " + this.className.split(" ").join("  ") + " ")
-                .split(" " + className + " ").join("  ").replace(/\s+/," ").trim();
+
+            this.className = this.className.replace(new RegExp('(^|\\b)' + className.replace(/\s+/g,'|') + '(\\b|$)', 'gi'), ' ').trim();
+
         });
         return this;
     };

@@ -172,6 +172,11 @@ function _test ($,jquery) {
             $el.removeClass("class2");
             expect($el[0].className).toBe("");
 
+            $el.addClass("class1 class2 class3");
+            expect($el[0].className).toBe("class1 class2 class3");
+            $el.removeClass("class1 class3");
+            expect($el[0].className).toBe("class2")
+
         });
 
         it("html and empty works", function() {
