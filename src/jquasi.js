@@ -69,8 +69,7 @@ define("jquasi", [], function () {
 
     jquasi.fn.addClass    = function (className) {
         this.each(function () {
-            this.className += " " + className + " ";
-            this.className = this.className.trim();
+            this.className = ( this.className+ " " + className + " ").trim();
         });
         return this;
     };
