@@ -205,7 +205,7 @@ define("jquasi", [], function () {
                         }
                         currentEl = currentEl.parentNode;
                     }
-                });
+                }, true); // use capture
             });
         }
         return this;

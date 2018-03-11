@@ -127,6 +127,28 @@ function _test ($,jquery) {
             setTimeout(function() {done()},200);
         });
 
+        it("live listeners stoppropagation should works", function (done) {
+            var listener = jasmine.createSpy().and.callFake(function () {
+                // done();
+            });
+            var listener2 = jasmine.createSpy().and.callFake(function () {
+                // done();
+            });
+            var $body = $('#test_container');
+            var $other = $('<div/>').attr("id","other_el");
+            $body.append($other);
+
+            $body.on('click', listener2);
+            $body.on('click','#other_el', function(e){
+                e.stopPropagation();
+                listener();
+            });
+            click($other[0]);
+            expect(listener).toHaveBeenCalled();
+            expect(listener2).not.toHaveBeenCalled();
+            setTimeout(function() {done()},200);
+        });
+
         it("class methods works", function () {
             var $el = $('#myelement');
 
