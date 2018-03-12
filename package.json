@@ -5,7 +5,7 @@
     "type": "git",
     "url": "https://github.com/LucaRainone/jquasi"
   },
-  "description": "A very tiny jquery-syntax-like library for DOM manipulation and listeners",
+  "description": "A very tiny jquery-syntax-like library for DOM manipulation and listeners. IE9+ compatible",
   "keywords": [
     "dom",
     "javascript",

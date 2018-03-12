@@ -7,6 +7,10 @@ define("jquasi", [], function () {
     }
 
     var doc = document;
+    var _id = 1;
+    var objectId = function(obj) {
+        return obj.jquasi || (obj.jquasi = _id++);
+    };
 
     var jquasi = function () {
 
@@ -156,12 +160,21 @@ define("jquasi", [], function () {
         return {
             originalEvent   : ev,
             preventDefault  : function() {ev.preventDefault()},
-            stopPropagation : function() {ev.stopPropagation()},
+            stopPropagation : function() {
+                ev.stopPropagation();
+                var id = objectId(ev.currentTarget);
+                memPropagation[id] = 1;
+                setTimeout(function() {
+                    memPropagation[id] = 0;
+                })
+            },
             altKey          : ev.altKey,
             shiftKey        : ev.shiftKey,
             ctrlKey         : ev.ctrlKey
         }
     };
+
+    var memPropagation = {};
 
     jquasi.fn.on = function (eventName, elOrCallback, callback) {
         var elementString;
@@ -189,6 +202,7 @@ define("jquasi", [], function () {
 
             this.each(function () {
                 this.addEventListener(eventName, function (ev) {
+                    if(memPropagation[objectId(this)]) return ;
                     var $els = jquasi(this).find(elementString);
                     var els  = buildArrayFrom($els);
                     var currentEl = ev.target;
