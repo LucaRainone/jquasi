@@ -3,7 +3,7 @@
 
 ## What
 
-This is a tiny (3kB minified) library to interact with the DOM using a jQuery-like syntax
+This is a tiny (3kB minified) and IE9+ compatible library to interact with the DOM using a jQuery-like syntax.
 
 ## Why
 
@@ -46,8 +46,8 @@ switch to jQuery without changing anything in your code!
 The API is a subset of the jQuery API.
 
 - ready: `$(function() {/* document is ready now */})`
-- create: `$('<div/>)`
-- selectos: `$('.classname[attr="value"])`. This use the `document.querySelectorAll` 
+- create: `$('<div/>')`
+- selectors: `$('.classname[attr="value"])`. This use the `document.querySelectorAll` 
 - each: `$('div').each(function() {console.log(this)})`
 - (add|remove|toggle|has)Class `$('div').addClass("class-for-all-div")`
 - attr: `$('div').attr("data-attr", "value")`
@@ -55,8 +55,8 @@ The API is a subset of the jQuery API.
 - append: `$('body').append($('<div/>'))`
 - parent: `$('.my-div').parent().parent()`
 - remove, clone, empty
-- `get()`
-- `find()`
+- get: `get()`
+- find: `find()`
 - listeners `$('body').on('click',function() {})`
 - live listeners: `$('body').on('click','.only-this',function() {})`
 - `.fn` as `prototype` shortcut
