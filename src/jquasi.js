@@ -1,8 +1,7 @@
 define("jquasi", [], function () {
 
     function buildArrayFrom(el) {
-        var ret = [];
-        for(var i = 0; i < el.length; i++) ret.push(el[i]);
+        for(var i = 0, ret = []; i < el.length; i++) ret.push(el[i]);
         return ret;
     }
 
@@ -19,12 +18,12 @@ define("jquasi", [], function () {
         if (this instanceof jquasi) {
             data = arguments[0];
 
-            this.data = "push" in data? data : [data];
+            data = "push" in data? data : [data];
 
-            for (i = 0; i < this.data.length; i++)
-                this[i] = this.data[i];
+            for (i = 0; i < data.length; i++)
+                this[i] = data[i];
 
-            this.length = this.data.length;
+            this.length = data.length;
 
             return;
         }
@@ -66,7 +65,7 @@ define("jquasi", [], function () {
     jquasi.fn.each = function (cbk) {
 
         for (var i = 0; i < this.length; i++)
-            cbk.apply(this.data[i], [i]);
+            cbk.apply(this[i], [i]);
 
         return this;
     };
@@ -88,7 +87,7 @@ define("jquasi", [], function () {
     };
 
     jquasi.fn.hasClass = function(className) {
-          return this.length? this.data[0].className.match(new RegExp(className.split("-").join('\\-'))) : false;
+          return this.length? this[0].className.match(new RegExp(className.split("-").join('\\-'))) : false;
     };
 
 
@@ -102,7 +101,7 @@ define("jquasi", [], function () {
     jquasi.fn.attr = function (attrName, attrValue) {
 
         if (attrValue === undefined)
-            return this.data[0].getAttribute(attrName);
+            return this[0].getAttribute(attrName);
 
         this.each(function () {
             this.setAttribute(attrName, attrValue);
@@ -114,7 +113,7 @@ define("jquasi", [], function () {
     jquasi.fn.html = function (a) {
 
         if (a === undefined)
-            return this.data[0].innerHTML;
+            return this[0].innerHTML;
 
         return this.each(function() {
             this.innerHTML = a;
@@ -124,7 +123,7 @@ define("jquasi", [], function () {
 
     jquasi.fn.append = function (a) {
         a = a instanceof jquasi ? a.get(0) : a;
-        this.data[0].appendChild(a);
+        this[0].appendChild(a);
         return this;
     };
 
@@ -153,7 +152,7 @@ define("jquasi", [], function () {
     };
 
     jquasi.fn.get = function (index) {
-        return index>=0? this.data[index] : this.data[this.length+index];
+        return index>=0? this[index] : this[this.length+index];
     };
 
     var _buildEvent = function (ev) {
