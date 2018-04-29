@@ -13,7 +13,7 @@
   ],
   "scripts": {
     "test": "karma start --single-run --browsers ChromeHeadless karma.conf.js",
-    "build": "node cutdefine.js | node_modules/.bin/uglifyjs -o dist/jquasi.min.js --compress --mangle --comments=/@license/ -"
+    "build": "node cutdefine.js | \"node_modules/.bin/uglifyjs\" -o dist/jquasi.min.js --compress --mangle --comments=/@license/ -"
   },
   "main": "dist/jquasi.min.js",
   "author": "Luca Rainone",
