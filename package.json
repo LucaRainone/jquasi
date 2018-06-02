@@ -20,13 +20,13 @@
   "license": "MIT",
   "devDependencies": {
     "istanbul": "^0.4.5",
-    "jasmine": "^2.9.0",
+    "jasmine": "^3.1.0",
     "jquery": "^3.3.1",
-    "karma": "^2.0.0",
+    "karma": "^2.0.2",
     "karma-chrome-launcher": "^2.2.0",
-    "karma-coverage": "^1.1.1",
-    "karma-coveralls": "^1.1.2",
-    "karma-jasmine": "^1.1.1",
+    "karma-coverage": "^1.1.2",
+    "karma-coveralls": "^1.2.1",
+    "karma-jasmine": "^1.1.2",
     "karma-requirejs": "^1.1.0",
     "requirejs": "^2.3.5",
     "uglifyjs": "^2.4.11"

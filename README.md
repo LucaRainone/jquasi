@@ -106,4 +106,4 @@ If you are adding new functionalities, please write the corresponding tests as w
 
 ### To create the minified version of jquasi run:
 
-`npm run-script build` 
+`npm run build` 
