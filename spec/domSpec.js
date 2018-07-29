@@ -1,7 +1,14 @@
-define(['jquery','jquasi'], function(jquery, jquasi) {
-    _test(jquasi, jquery);
-    _test(jquery, jquery);
+
+define([], function() {
+    return {
+        start: function($toTest, $tReferer) {
+            _test($toTest, $tReferer);
+        }
+    }
+
 });
+
+
 
 function _test ($,jquery) {
 
@@ -19,6 +26,7 @@ function _test ($,jquery) {
     }
 
     describe("Check for base works", function () {
+
         $('body').append($('<div/>').attr("id","test_container"));
         it("should be defined and create a div with a id", function () {
             $('#myelement').remove();
@@ -90,6 +98,79 @@ function _test ($,jquery) {
             expect($el.on('click', listener)).toBe($el);
             click(document.getElementById("myelement"));
             expect(listener).toHaveBeenCalled();
+        });
+
+        it("remove listeners works (specific)", function (done) {
+            var $el = $('#myelement');
+            var listener = jasmine.createSpy().and.callFake(function () {
+                done();
+            });
+            var listener2 = jasmine.createSpy().and.callFake(function () {
+                expect(this).toBe($el[0]);
+                done();
+            });
+            $el.on('click', listener);
+            $el.on('click', listener2);
+
+            $el.off('click', listener);
+
+            click(document.getElementById("myelement"));
+            expect(listener).not.toHaveBeenCalled();
+            expect(listener2).toHaveBeenCalled();
+            setTimeout(function() {done()},500);
+        });
+
+        it("remove listeners works without callback", function (done) {
+            var $el = $('#myelement');
+            var listener = jasmine.createSpy().and.callFake(function () {
+                done();
+            });
+            var listener2 = jasmine.createSpy().and.callFake(function () {
+                done();
+            });
+            $el.on('click', listener);
+            $el.on('click', listener2);
+            $el.off('click');
+            click(document.getElementById("myelement"));
+            expect(listener).not.toHaveBeenCalled();
+            expect(listener2).not.toHaveBeenCalled();
+            setTimeout(function() {done()},500);
+        });
+
+        it("remove listeners works with namespace", function (done) {
+            var $el = $('#myelement');
+            var listener = jasmine.createSpy().and.callFake(function () {
+                expect(this).toBe($el[0]);
+                done();
+            });
+            var listener2 = jasmine.createSpy().and.callFake(function () {
+                expect(this).toBe($el[0]);
+                done();
+            });
+            $el.on('click.myNamespace', listener);
+            $el.on('click.myNamespace', listener2);
+            $el.off('click.myNamespace', listener);
+            click(document.getElementById("myelement"));
+            expect(listener).not.toHaveBeenCalled();
+            expect(listener2).toHaveBeenCalled();
+            setTimeout(function() {done()},500);
+        });
+
+        it("remove listeners works with namespace without callback", function (done) {
+            var $el = $('#myelement');
+            var listener = jasmine.createSpy().and.callFake(function () {
+                done();
+            });
+            var listener2 = jasmine.createSpy().and.callFake(function () {
+                done();
+            });
+            $el.on('click.myNamespace', listener);
+            $el.on('click.myNamespace', listener2);
+            $el.off('click.myNamespace');
+            click(document.getElementById("myelement"));
+            expect(listener).not.toHaveBeenCalled();
+            expect(listener2).not.toHaveBeenCalled();
+            setTimeout(function() {done()},500);
         });
 
         it("live listeners works", function (done) {
@@ -178,6 +259,45 @@ function _test ($,jquery) {
                 click($other[0]);
             },10);
         });
+
+        it("remove live listeners works", function (done) {
+            var listener = jasmine.createSpy().and.callFake(function () {
+                expect(this).toBe(document.getElementById("myelement"));
+                done();
+            });
+            var listener2 = jasmine.createSpy().and.callFake(function () {
+                expect(this).toBe(document.getElementById("myelement"));
+                done();
+            });
+            var $body = $('#test_container');
+            $body.on('click','#myelement', listener);
+            $body.on('click','#myelement', listener2);
+            $body.off('click','#myelement', listener);
+            click(document.getElementById("myelement"));
+            expect(listener).not.toHaveBeenCalled();
+            expect(listener2).toHaveBeenCalled();
+            setTimeout(function() {done()},500);
+        });
+
+        it("remove live listeners works generic", function (done) {
+            var listener = jasmine.createSpy().and.callFake(function () {
+                expect(this).toBe(document.getElementById("myelement"));
+                done();
+            });
+            var listener2 = jasmine.createSpy().and.callFake(function () {
+                expect(this).toBe(document.getElementById("myelement"));
+                done();
+            });
+            var $body = $('#test_container');
+            $body.on('click','#myelement', listener);
+            $body.on('click','#myelement', listener2);
+            $body.off('click','#myelement');
+            click(document.getElementById("myelement"));
+            expect(listener).not.toHaveBeenCalled();
+            expect(listener2).not.toHaveBeenCalled();
+            setTimeout(function() {done()},500);
+        });
+
 
         it("class methods works", function () {
             var $el = $('#myelement');
@@ -313,10 +433,10 @@ function _test ($,jquery) {
             $firstDiv = $('<div/>');
             $secondDiv = $('<div/>');
             $('#test_container')
-                .append($firstDiv)
-                .append($secondDiv)
-                .append($('<div/>'))
-                .append($('<div/>'));
+            .append($firstDiv)
+            .append($secondDiv)
+            .append($('<div/>'))
+            .append($('<div/>'));
         });
         it("html(text) should write all div", function() {
 
@@ -331,7 +451,9 @@ function _test ($,jquery) {
         it("html() should return only the content of the first", function() {
             $firstDiv.html("Hello");
             $secondDiv.html("World");
-            expect($('#test_container').find("div").html()).toBe("Hello")
+            expect($('#test_container').find("div").html()).toBe("Hello");
         })
+
     });
+
 }

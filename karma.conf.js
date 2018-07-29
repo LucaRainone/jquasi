@@ -5,7 +5,8 @@ module.exports = function(config) {
     if(process.env.SENDCOVERALLS)
         reporters.push('coveralls');
 
-    config.set({
+config.set({
+        random: false,
         basePath:'',
         frameworks: [ 'jasmine','requirejs'],
         files: [
@@ -13,7 +14,6 @@ module.exports = function(config) {
             {pattern: 'src/**/*.js', included: false},
             'spec/init.js',
             {pattern:'spec/**/*[sS]pec*.js', included: false}
-            // 'node_modules/jquery/dist/jquery.min.js'
         ],
         preprocessors: {
             'src/**/*.js': ['coverage']
