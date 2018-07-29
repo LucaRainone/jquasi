@@ -11,9 +11,13 @@
     "javascript",
     "browser"
   ],
+  "watch": {
+    "build" : "src/*.js"
+  },
   "scripts": {
     "test": "karma start --single-run --browsers ChromeHeadless karma.conf.js",
-    "build": "node cutdefine.js | \"node_modules/.bin/uglifyjs\" -o dist/jquasi.min.js --compress --mangle --comments=/@license/ -"
+    "build": "node cutdefine.js | \"node_modules/.bin/uglifyjs\" -o dist/jquasi.min.js --compress --mangle --comments=/@license/ -",
+    "watch": "npm-watch"
   },
   "main": "dist/jquasi.min.js",
   "author": "Luca Rainone",
@@ -28,6 +32,7 @@
     "karma-coveralls": "^1.2.1",
     "karma-jasmine": "^1.1.2",
     "karma-requirejs": "^1.1.0",
+    "npm-watch": "^0.3.0",
     "requirejs": "^2.3.5",
     "uglifyjs": "^2.4.11"
   }

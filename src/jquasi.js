@@ -1,8 +1,13 @@
 define("jquasi", [], function () {
 
     function buildArrayFrom(el) {
-        for(var i = 0, ret = []; i < el.length; i++) ret.push(el[i]);
+        var ret= [];
+        forEach(el, ret.push.bind(ret));
         return ret;
+    }
+
+    function forEach(el, cbk) {
+        for(var i = 0; i < el.length; i++) cbk(el[i]);
     }
 
     var doc = document;
@@ -174,9 +179,16 @@ define("jquasi", [], function () {
     };
 
     var memPropagation = {};
-
+    var memNsEvents = {};
+    var _getNamespaceEvent = function(str) {
+        return str.split(".",2);
+    };
     jquasi.fn.on = function (eventName, elOrCallback, callback) {
-        var elementString;
+
+        var evNs = _getNamespaceEvent(eventName), elementString;
+        var namespace = evNs[1] || "";
+
+        eventName = evNs[0];
 
         if (typeof elOrCallback === 'function')
             callback = elOrCallback;
@@ -193,14 +205,20 @@ define("jquasi", [], function () {
 
         if (elementString === undefined) {
             this.each(function () {
-                this.addEventListener(eventName, function (ev) {
+                var objId = objectId(this), _listener;
+                _listener =  function (ev) {
                     callAndCheckPropagationAndDefault(this,ev);
-                });
+                };
+
+                if(!memNsEvents[objId]) memNsEvents[objId] = {};
+                if(!memNsEvents[objId][eventName]) memNsEvents[objId][eventName] = [];
+                memNsEvents[objId][eventName].push([namespace, callback, _listener, elementString]);
+                this.addEventListener(eventName,_listener);
             });
         } else {
 
             this.each(function () {
-                this.addEventListener(eventName, function (ev) {
+                var _listener = function (ev) {
                     if(memPropagation[objectId(this)]) return ;
                     var $els = jquasi(this).find(elementString);
                     var els  = buildArrayFrom($els);
@@ -216,12 +234,61 @@ define("jquasi", [], function () {
                         if (currentEl === this || currentEl === doc.body) {
                             break;
                         }
+
                         currentEl = currentEl.parentNode;
                     }
-                }, true); // use capture
+                };
+                var objId = objectId(this);
+                if(!memNsEvents[objId]) memNsEvents[objId] = {};
+                if(!memNsEvents[objId][eventName]) memNsEvents[objId][eventName] = [];
+                memNsEvents[objId][eventName].push([namespace, callback, _listener, elementString]);
+                this.addEventListener(eventName, _listener, true); // use capture
             });
         }
         return this;
+    };
+
+    jquasi.fn.off = function(eventName, elOrCallback, callback) {
+        var listeners;
+        var evNs = _getNamespaceEvent(eventName), elementString;
+        var namespace = evNs[1] || "";
+
+        eventName = evNs[0];
+
+        if (typeof elOrCallback === 'function')
+            callback = elOrCallback;
+        else
+            elementString = elOrCallback;
+
+        return this.each(function() {
+            var el = this;
+            var objId = objectId(this);
+
+            if(!memNsEvents[objId])
+                return ;
+
+            if(callback) {
+
+                if((listeners = memNsEvents[objId][eventName])) {
+                    forEach(listeners, function(listener) {
+                        if(listener[1] === callback && elementString === listener[3]) {
+                            el.removeEventListener(eventName, listener[2], !!elementString);
+                        }
+                    });
+                }
+
+            } else {
+
+                if((listeners = memNsEvents[objId][eventName])) {
+                    forEach(listeners, function(listener) {
+                        if(namespace === listener[0] && elementString === listener[3]) {
+                            el.removeEventListener(eventName, listener[2], !!elementString);
+                        }
+                    });
+                }
+
+            }
+        })
     };
 
     jquasi.fn.parent = function () {
