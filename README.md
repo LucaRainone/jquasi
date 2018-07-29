@@ -58,7 +58,11 @@ The API is a subset of the jQuery API.
 - get: `get()`
 - find: `find()`
 - listeners `$('body').on('click',function() {})`
-- live listeners: `$('body').on('click','.only-this',function() {})`
+- event delegation: `$('body').on('click','.only-this',function() {})`
+- remove listeners `$('body').off('click')`
+- namespaced events `$('body').on('click.my-custom-namespace')`
+- remove namespaced events `$('body').off('.my-custom-namespace')`
+- remove all delegated event handlers `$('body').off('click', '**')`
 - `.fn` as `prototype` shortcut
 - <strike>`.css()`</strike> is not available because it would be hard to keep jquery
 compatibility without making the library much bigger
