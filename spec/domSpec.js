@@ -46,6 +46,17 @@ function _test ($,jquery) {
             $('#myelement').remove();
             expect(document.getElementById("myelement")).toBeNull();
         });
+
+        it("with array", function() {
+            var a = $([3]);
+            a.each(function(index,element) {
+                expect(index).toBe(0);
+                expect(element).toBe(3);
+                expect(this).toEqual(new Number(3));
+            })
+
+        })
+
     });
 
     describe("Check methods", function () {
@@ -84,7 +95,7 @@ function _test ($,jquery) {
                 listener();
             });
             jquery(function() {
-                setTimeout(function() {expect(listener).toHaveBeenCalled();done()},50)
+                setTimeout(function() {expect(listener).toHaveBeenCalled();done()},20)
             })
 
         });
@@ -98,6 +109,38 @@ function _test ($,jquery) {
             expect($el.on('click', listener)).toBe($el);
             click(document.getElementById("myelement"));
             expect(listener).toHaveBeenCalled();
+        });
+
+        it("remove all listeners works", function (done) {
+            var $el = $('#myelement');
+            var listener = jasmine.createSpy().and.callFake(function () {
+                done();
+            });
+            var listener2 = jasmine.createSpy().and.callFake(function () {
+                done();
+            });
+            $el.on('click', listener);
+            $el.on('click', listener2);
+            $el.off();
+            click(document.getElementById("myelement"));
+            expect(listener).not.toHaveBeenCalled();
+            expect(listener2).not.toHaveBeenCalled();
+            setTimeout(function() {done()},20);
+        });
+
+        it("off listeners never added", function (done) {
+            var $el = $('#myelement');
+            var listener = jasmine.createSpy().and.callFake(function () {
+                done();
+            });
+            var listener2 = jasmine.createSpy().and.callFake(function () {
+                done();
+            });
+            $el.off();
+            click(document.getElementById("myelement"));
+            expect(listener).not.toHaveBeenCalled();
+            expect(listener2).not.toHaveBeenCalled();
+            setTimeout(function() {done()},20);
         });
 
         it("remove listeners works (specific)", function (done) {
@@ -117,7 +160,7 @@ function _test ($,jquery) {
             click(document.getElementById("myelement"));
             expect(listener).not.toHaveBeenCalled();
             expect(listener2).toHaveBeenCalled();
-            setTimeout(function() {done()},500);
+            setTimeout(function() {done()},20);
         });
 
         it("remove listeners works without callback", function (done) {
@@ -134,7 +177,7 @@ function _test ($,jquery) {
             click(document.getElementById("myelement"));
             expect(listener).not.toHaveBeenCalled();
             expect(listener2).not.toHaveBeenCalled();
-            setTimeout(function() {done()},500);
+            setTimeout(function() {done()},20);
         });
 
         it("remove listeners works with namespace", function (done) {
@@ -153,9 +196,82 @@ function _test ($,jquery) {
             click(document.getElementById("myelement"));
             expect(listener).not.toHaveBeenCalled();
             expect(listener2).toHaveBeenCalled();
-            setTimeout(function() {done()},500);
+            setTimeout(function() {done()},20);
         });
 
+        it("remove all namespaced listeners works", function (done) {
+            var $el = $('#myelement');
+            var listener = jasmine.createSpy().and.callFake(function () {
+                done();
+            });
+            var listener2 = jasmine.createSpy().and.callFake(function () {
+                done();
+            });
+            $el.on('click.myNamespace', listener);
+            $el.on('click.myNamespace', listener2);
+            $el.off('.myNamespace');
+            click(document.getElementById("myelement"));
+            expect(listener).not.toHaveBeenCalled();
+            expect(listener2).not.toHaveBeenCalled();
+            setTimeout(function() {done()},20);
+        });
+
+        it("mix namespace", function (done) {
+            var $el = $('#myelement');
+            var listener = jasmine.createSpy().and.callFake(function () {
+                done();
+            });
+            var listener2 = jasmine.createSpy().and.callFake(function () {
+                done();
+            });
+            $el.on('click.myNamespace', listener);
+            $el.on('click.myNamespace', listener2);
+            $el.off('.myNamespace');
+            click(document.getElementById("myelement"));
+            expect(listener).not.toHaveBeenCalled();
+            expect(listener2).not.toHaveBeenCalled();
+            setTimeout(function() {done()},20);
+        });
+
+        it("off events without namespace should off namespaced events", function (done) {
+            var $el = $('#myelement');
+            var listener = jasmine.createSpy().and.callFake(function () {
+                done();
+            });
+            var listener2 = jasmine.createSpy().and.callFake(function () {
+                done();
+            });
+            $el.on('click.myNamespace', listener);
+            $el.on('click.myNamespace', listener2);
+            $el.off('click');
+            click(document.getElementById("myelement"));
+            expect(listener).not.toHaveBeenCalled();
+            expect(listener2).not.toHaveBeenCalled();
+            setTimeout(function() {done()},20);
+        });
+
+        it("off namespaced delegated event", function (done) {
+            var listener = jasmine.createSpy().and.callFake(function () {
+                done();
+            });
+            var $body = $('#test_container');
+            $body.on('click.myNamespace','#myelement', listener);
+            $body.off('.myNamespace');
+            click(document.getElementById("myelement"));
+            expect(listener).not.toHaveBeenCalled();
+            setTimeout(function() {done()},20);
+        });
+        it("off should Remove all delegated click handlers", function (done) {
+            var listener = jasmine.createSpy().and.callFake(function () {
+                done();
+            });
+            var $body = $('#test_container');
+            $body.on('click','#myelement', listener);
+            $body.off('click', "**");
+            click(document.getElementById("myelement"));
+            expect(listener).not.toHaveBeenCalled();
+            setTimeout(function() {done()},20);
+        });
         it("remove listeners works with namespace without callback", function (done) {
             var $el = $('#myelement');
             var listener = jasmine.createSpy().and.callFake(function () {
@@ -170,7 +286,7 @@ function _test ($,jquery) {
             click(document.getElementById("myelement"));
             expect(listener).not.toHaveBeenCalled();
             expect(listener2).not.toHaveBeenCalled();
-            setTimeout(function() {done()},500);
+            setTimeout(function() {done()},20);
         });
 
         it("live listeners works", function (done) {
@@ -192,7 +308,7 @@ function _test ($,jquery) {
             expect($body.on('click','#myelement', listener)).toBe($body);
             click(document.getElementById("test_container"));
             expect(listener).not.toHaveBeenCalled();
-            setTimeout(function() {done()},200);
+            setTimeout(function() {done()},20);
         });
 
         it("live listeners do not fire on any other element", function (done) {
@@ -205,7 +321,7 @@ function _test ($,jquery) {
             expect($body.on('click','#myelement', listener)).toBe($body);
             click($other[0]);
             expect(listener).not.toHaveBeenCalled();
-            setTimeout(function() {done()},200);
+            setTimeout(function() {done()},20);
         });
 
         it("live listeners stoppropagation should works", function (done) {
@@ -227,7 +343,7 @@ function _test ($,jquery) {
             click($other[0]);
             expect(listener).toHaveBeenCalled();
             expect(listener2).not.toHaveBeenCalled();
-            setTimeout(function() {done()},200);
+            setTimeout(function() {done()},20);
         });
 
         it("live listeners stoppropagation should works with element inside element", function (done) {
@@ -276,7 +392,7 @@ function _test ($,jquery) {
             click(document.getElementById("myelement"));
             expect(listener).not.toHaveBeenCalled();
             expect(listener2).toHaveBeenCalled();
-            setTimeout(function() {done()},500);
+            setTimeout(function() {done()},20);
         });
 
         it("remove live listeners works generic", function (done) {
@@ -295,7 +411,7 @@ function _test ($,jquery) {
             click(document.getElementById("myelement"));
             expect(listener).not.toHaveBeenCalled();
             expect(listener2).not.toHaveBeenCalled();
-            setTimeout(function() {done()},500);
+            setTimeout(function() {done()},20);
         });
 
 
@@ -448,10 +564,14 @@ function _test ($,jquery) {
 
         });
 
-        it("html() should return only the content of the first", function() {
+        it("html() should return only the content of the first", function(done) {
             $firstDiv.html("Hello");
             $secondDiv.html("World");
             expect($('#test_container').find("div").html()).toBe("Hello");
+            setTimeout(function() {
+                $('#test_container').empty();
+                done();
+            },100)
         })
 
     });
