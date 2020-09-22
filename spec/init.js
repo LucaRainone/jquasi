@@ -10,7 +10,6 @@ if(window.__karma__) {
        callback : function(domSpec) {
            require(["jquery", "jquasi"], function($, jquasi) {
 
-               jasmine.getEnv().randomizeTests(false);
                // jasmineEnv.randomizeTests(false);
                describe("jquasi must works", function() {
                    domSpec.start(jquasi,$);
