@@ -1,15 +1,15 @@
 define("jquasi", [], function () {
 
     function buildArrayFrom(el) {
-        var ret= [];
-        forEachAndFilter(el, function(el) {ret.push(el)});
+        var ret = [];
+        forEachAndFilter(el, function (el) {ret.push(el)});
         return ret;
     }
 
     function forEachAndFilter(el, cbk) {
-        for(var i = 0; i < el.length; i++) {
-            if(cbk(el[i]) === false) {
-                el.splice(i,1);
+        for (var i = 0; i < el.length; i++) {
+            if (cbk(el[i]) === false) {
+                el.splice(i, 1);
                 i--;
             }
         }
@@ -17,7 +17,7 @@ define("jquasi", [], function () {
 
     var doc = document;
     var _id = 1;
-    var objectId = function(obj) {
+    var objectId = function (obj) {
         return obj.jquasi || (obj.jquasi = _id++);
     };
 
@@ -28,7 +28,7 @@ define("jquasi", [], function () {
         if (this instanceof jquasi) {
             data = arguments[0];
 
-            data = "push" in data? data : [data];
+            data = "push" in data ? data : [data];
 
             for (i = 0; i < data.length; i++)
                 this[i] = data[i];
@@ -56,8 +56,8 @@ define("jquasi", [], function () {
         if (arg1 instanceof HTMLElement)
             return new jquasi(arg1);
 
-        if(typeof arg1 === 'function') {
-            if (doc.attachEvent ? doc.readyState === "complete" : doc.readyState !== "loading"){
+        if (typeof arg1 === 'function') {
+            if (doc.attachEvent ? doc.readyState === "complete" : doc.readyState !== "loading") {
                 arg1();
             } else {
                 doc.addEventListener('DOMContentLoaded', arg1);
@@ -70,7 +70,7 @@ define("jquasi", [], function () {
 
     };
 
-    jquasi.fn =jquasi.prototype;
+    jquasi.fn = jquasi.prototype;
 
     jquasi.fn.each = function (cbk) {
 
@@ -80,9 +80,9 @@ define("jquasi", [], function () {
         return this;
     };
 
-    jquasi.fn.addClass    = function (className) {
+    jquasi.fn.addClass = function (className) {
         this.each(function () {
-            this.className = ( this.className+ " " + className + " ").trim();
+            this.className = (this.className + " " + className + " ").trim();
         });
         return this;
     };
@@ -90,21 +90,21 @@ define("jquasi", [], function () {
     jquasi.fn.removeClass = function (className) {
         this.each(function () {
 
-            this.className = this.className.replace(new RegExp('(^|\\b)' + className.replace(/\s+/g,'|') + '(\\b|$)', 'gi'), ' ').trim();
+            this.className = this.className.replace(new RegExp('(^|\\b)' + className.replace(/\s+/g, '|') + '(\\b|$)', 'gi'), ' ').trim();
 
         });
         return this;
     };
 
-    jquasi.fn.hasClass = function(className) {
-          return this.length? this[0].className.match(new RegExp(className.split("-").join('\\-'))) : false;
+    jquasi.fn.hasClass = function (className) {
+        return this.length ? this[0].className.match(new RegExp(className.split("-").join('\\-'))) : false;
     };
 
 
-    jquasi.fn.toggleClass = function(className) {
-        return this.each(function() {
+    jquasi.fn.toggleClass = function (className) {
+        return this.each(function () {
             var $this = jquasi(this);
-            $this.hasClass(className)? $this.removeClass(className) : $this.addClass(className);
+            $this.hasClass(className) ? $this.removeClass(className) : $this.addClass(className);
         });
     };
 
@@ -125,7 +125,7 @@ define("jquasi", [], function () {
         if (a === undefined)
             return this[0].innerHTML;
 
-        return this.each(function() {
+        return this.each(function () {
             this.innerHTML = a;
         });
 
@@ -141,8 +141,8 @@ define("jquasi", [], function () {
         return new jquasi(this.get(0).cloneNode(true));
     };
 
-    jquasi.fn.remove = function() {
-        return this.each(function() {
+    jquasi.fn.remove = function () {
+        return this.each(function () {
             this.parentNode && this.parentNode.removeChild(this);
         });
     };
@@ -162,31 +162,33 @@ define("jquasi", [], function () {
     };
 
     jquasi.fn.get = function (index) {
-        return index>=0? this[index] : this[this.length+index];
+        return index >= 0 ? this[index] : this[this.length + index];
     };
 
     var _buildEvent = function (ev) {
         return {
-            originalEvent   : ev,
-            preventDefault  : function() {ev.preventDefault()},
-            stopPropagation : function() {
+            originalEvent: ev,
+            preventDefault: function () {
+                ev.preventDefault()
+            },
+            stopPropagation: function () {
                 ev.stopPropagation();
                 var id = objectId(ev.currentTarget);
                 memPropagation[id] = 1;
-                setTimeout(function() {
+                setTimeout(function () {
                     memPropagation[id] = 0;
                 })
             },
-            altKey          : ev.altKey,
-            shiftKey        : ev.shiftKey,
-            ctrlKey         : ev.ctrlKey
+            altKey: ev.altKey,
+            shiftKey: ev.shiftKey,
+            ctrlKey: ev.ctrlKey
         }
     };
 
     var memPropagation = {};
     var memNsEvents = {};
-    var _getNamespaceEvent = function(str) {
-        return str? str.split(".",2) : [undefined];
+    var _getNamespaceEvent = function (str) {
+        return str ? str.split(".", 2) : [undefined];
     };
     jquasi.fn.on = function (eventName, elOrCallback, callback) {
 
@@ -200,9 +202,9 @@ define("jquasi", [], function () {
         else
             elementString = elOrCallback;
 
-        var callAndCheckPropagationAndDefault = function(el, ev) {
+        var callAndCheckPropagationAndDefault = function (el, ev) {
             // in callback, return false means both stopPropagation and preventDefault
-            if(callback.call(el, _buildEvent(ev)) === false) {
+            if (callback.call(el, _buildEvent(ev)) === false) {
                 ev.stopPropagation();
                 ev.preventDefault();
             }
@@ -211,28 +213,28 @@ define("jquasi", [], function () {
         if (elementString === undefined) {
             this.each(function () {
                 var objId = objectId(this), _listener;
-                _listener =  function (ev) {
-                    callAndCheckPropagationAndDefault(this,ev);
+                _listener = function (ev) {
+                    callAndCheckPropagationAndDefault(this, ev);
                 };
 
-                if(!memNsEvents[objId]) memNsEvents[objId] = {};
-                if(!memNsEvents[objId][eventName]) memNsEvents[objId][eventName] = [];
+                if (!memNsEvents[objId]) memNsEvents[objId] = {};
+                if (!memNsEvents[objId][eventName]) memNsEvents[objId][eventName] = [];
                 memNsEvents[objId][eventName].push([namespace, callback, _listener, elementString]);
-                this.addEventListener(eventName,_listener);
+                this.addEventListener(eventName, _listener);
             });
         } else {
 
             this.each(function () {
                 var _listener = function (ev) {
-                    if(memPropagation[objectId(this)]) return ;
+                    if (memPropagation[objectId(this)]) return;
                     var $els = jquasi(this).find(elementString);
-                    var els  = buildArrayFrom($els);
+                    var els = buildArrayFrom($els);
                     var currentEl = ev.target;
 
                     while (currentEl) {
 
                         if (els.indexOf(currentEl) !== -1) {
-                            callAndCheckPropagationAndDefault(currentEl,ev);
+                            callAndCheckPropagationAndDefault(currentEl, ev);
                             break;
                         }
 
@@ -244,8 +246,8 @@ define("jquasi", [], function () {
                     }
                 };
                 var objId = objectId(this);
-                if(!memNsEvents[objId]) memNsEvents[objId] = {};
-                if(!memNsEvents[objId][eventName]) memNsEvents[objId][eventName] = [];
+                if (!memNsEvents[objId]) memNsEvents[objId] = {};
+                if (!memNsEvents[objId][eventName]) memNsEvents[objId][eventName] = [];
                 memNsEvents[objId][eventName].push([namespace, callback, _listener, elementString]);
                 this.addEventListener(eventName, _listener, true); // use capture
             });
@@ -253,7 +255,7 @@ define("jquasi", [], function () {
         return this;
     };
 
-    jquasi.fn.off = function(eventName, elOrCallback, callback) {
+    jquasi.fn.off = function (eventName, elOrCallback, callback) {
         var listeners;
         var evNs = _getNamespaceEvent(eventName), elementString;
         var namespace = evNs[1] || "";
@@ -265,22 +267,22 @@ define("jquasi", [], function () {
         else
             elementString = elOrCallback;
 
-        var _check = function(namespace, listener, elementString) {
+        var _check = function (namespace, listener, elementString) {
             return (!namespace || namespace === listener[0]) && (!elementString || elementString === listener[3] || elementString === "**");
         };
 
-        return this.each(function() {
+        return this.each(function () {
             var el = this;
             var objId = objectId(this);
 
-            if(!memNsEvents[objId])
-                return ;
+            if (!memNsEvents[objId])
+                return;
 
-            if(callback) {
+            if (callback) {
 
-                if((listeners = memNsEvents[objId][eventName])) {
-                    forEachAndFilter(listeners, function(listener) {
-                        if(listener[1] === callback && elementString === listener[3]) {
+                if ((listeners = memNsEvents[objId][eventName])) {
+                    forEachAndFilter(listeners, function (listener) {
+                        if (listener[1] === callback && elementString === listener[3]) {
                             el.removeEventListener(eventName, listener[2], !!elementString);
                             return false;
                         }
@@ -289,20 +291,20 @@ define("jquasi", [], function () {
 
             } else {
 
-                if(!eventName) {
-                    for(var evName in memNsEvents[objId]) {
+                if (!eventName) {
+                    for (var evName in memNsEvents[objId]) {
 
-                        forEachAndFilter(memNsEvents[objId][evName], function(listener) {
-                            if(_check(namespace, listener, elementString)) {
+                        forEachAndFilter(memNsEvents[objId][evName], function (listener) {
+                            if (_check(namespace, listener, elementString)) {
                                 el.removeEventListener(evName, listener[2], !!listener[3]);
                                 return false;
                             }
                         });
 
                     }
-                }else if( (listeners = memNsEvents[objId][eventName])) {
-                    forEachAndFilter(listeners, function(listener) {
-                        if(_check(namespace, listener, elementString)) {
+                } else if ((listeners = memNsEvents[objId][eventName])) {
+                    forEachAndFilter(listeners, function (listener) {
+                        if (_check(namespace, listener, elementString)) {
                             el.removeEventListener(eventName, listener[2], !!listener[3]);
                             return false;
                         }
