@@ -27,7 +27,11 @@ function _test ($,jquery) {
 
     describe("Check for base works", function () {
 
-        $('body').append($('<div/>').attr("id","test_container"));
+        beforeEach(function () {
+            $('#test_container').remove();
+            $('body').append($('<div/>').attr("id","test_container"));
+        });
+
         it("should be defined and create a div with a id", function () {
             $('#myelement').remove();
             var $body = $('#test_container');
