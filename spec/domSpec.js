@@ -13,7 +13,7 @@ define([], function() {
 function _test ($,jquery) {
 
     function click(el) {
-        var ev = document.createEvent("MouseEvent");
+        let ev = document.createEvent("MouseEvent");
         ev.initMouseEvent(
             "click",
             true /* bubble */, true /* cancelable */,
@@ -34,7 +34,7 @@ function _test ($,jquery) {
 
         it("should be defined and create a div with a id", function () {
             $('#myelement').remove();
-            var $body = $('#test_container');
+            let $body = $('#test_container');
             document.body.appendChild($body[0]);
             $body.append($('<div/>').attr("id", "myelement"));
 
@@ -52,7 +52,7 @@ function _test ($,jquery) {
         });
 
         it("with array", function() {
-            var a = $([3]);
+            let a = $([3]);
             a.each(function(index,element) {
                 expect(index).toBe(0);
                 expect(element).toBe(3);
@@ -68,15 +68,15 @@ function _test ($,jquery) {
         beforeEach(function () {
             $('#test_container').remove();
             $('body').append($('<div/>').attr("id","test_container"));
-            var $body = $('#test_container');
+            let $body = $('#test_container');
             $body.find("div").remove();
             $('#myelement').remove();
             $body.append($('<div/>').attr("id", "myelement"));
         });
 
         it("constructor works", function () {
-            var $el = $('#myelement');
-            var orgElement = document.getElementById("myelement");
+            let $el = $('#myelement');
+            let orgElement = document.getElementById("myelement");
             expect($el.length).toBe(1);
             expect($el).toBe($el);
 
@@ -93,7 +93,7 @@ function _test ($,jquery) {
         });
 
         it("document ready should works", function(done) {
-            var listener = jasmine.createSpy();
+            let listener = jasmine.createSpy();
 
             $(function() {
                 listener();
@@ -105,10 +105,14 @@ function _test ($,jquery) {
         });
 
         it("listeners works", function (done) {
-            var $el = $('#myelement');
-            var listener = jasmine.createSpy().and.callFake(function () {
+            let doneCalled = false;
+            let $el = $('#myelement');
+            let listener = jasmine.createSpy().and.callFake(function () {
                 expect(this).toBe($el[0]);
-                done();
+                if(!doneCalled) {
+                    doneCalled = true;
+                    done();
+                }
             });
             expect($el.on('click', listener)).toBe($el);
             click(document.getElementById("myelement"));
@@ -116,12 +120,19 @@ function _test ($,jquery) {
         });
 
         it("remove all listeners works", function (done) {
-            var $el = $('#myelement');
-            var listener = jasmine.createSpy().and.callFake(function () {
-                done();
+            let $el = $('#myelement');
+            let doneCalled = false;
+            let listener = jasmine.createSpy().and.callFake(function () {
+                if(!doneCalled) {
+                    doneCalled = true;
+                    done();
+                }
             });
-            var listener2 = jasmine.createSpy().and.callFake(function () {
-                done();
+            let listener2 = jasmine.createSpy().and.callFake(function () {
+                if(!doneCalled) {
+                    doneCalled = true;
+                    done();
+                }
             });
             $el.on('click', listener);
             $el.on('click', listener2);
@@ -129,32 +140,55 @@ function _test ($,jquery) {
             click(document.getElementById("myelement"));
             expect(listener).not.toHaveBeenCalled();
             expect(listener2).not.toHaveBeenCalled();
-            setTimeout(function() {done()},20);
+            setTimeout(function() {
+                if(!doneCalled) {
+                    doneCalled = true;
+                    done();
+                }
+            },20);
         });
 
         it("off listeners never added", function (done) {
-            var $el = $('#myelement');
-            var listener = jasmine.createSpy().and.callFake(function () {
-                done();
+            let $el = $('#myelement');
+            let doneCalled = false;
+            let listener = jasmine.createSpy().and.callFake(function () {
+                if(!doneCalled) {
+                    doneCalled = true;
+                    done();
+                }
             });
-            var listener2 = jasmine.createSpy().and.callFake(function () {
-                done();
+            let listener2 = jasmine.createSpy().and.callFake(function () {
+                if(!doneCalled) {
+                    doneCalled = true;
+                    done();
+                }
             });
             $el.off();
             click(document.getElementById("myelement"));
             expect(listener).not.toHaveBeenCalled();
             expect(listener2).not.toHaveBeenCalled();
-            setTimeout(function() {done()},20);
+            setTimeout(function() {
+                if(!doneCalled) {
+                doneCalled = true;
+                done();
+            }},20);
         });
 
         it("remove listeners works (specific)", function (done) {
-            var $el = $('#myelement');
-            var listener = jasmine.createSpy().and.callFake(function () {
-                done();
+            let $el = $('#myelement');
+            let doneCalled = false;
+            let listener = jasmine.createSpy().and.callFake(function () {
+                if(!doneCalled) {
+                    doneCalled = true;
+                    done();
+                }
             });
-            var listener2 = jasmine.createSpy().and.callFake(function () {
+            let listener2 = jasmine.createSpy().and.callFake(function () {
                 expect(this).toBe($el[0]);
-                done();
+                if(!doneCalled) {
+                    doneCalled = true;
+                    done();
+                }
             });
             $el.on('click', listener);
             $el.on('click', listener2);
@@ -164,16 +198,28 @@ function _test ($,jquery) {
             click(document.getElementById("myelement"));
             expect(listener).not.toHaveBeenCalled();
             expect(listener2).toHaveBeenCalled();
-            setTimeout(function() {done()},20);
+            setTimeout(function() {
+                if(!doneCalled) {
+                    doneCalled = true;
+                    done();
+                }
+            },20);
         });
 
         it("remove listeners works without callback", function (done) {
-            var $el = $('#myelement');
-            var listener = jasmine.createSpy().and.callFake(function () {
-                done();
+            let $el = $('#myelement');
+            let doneCalled = false;
+            let listener = jasmine.createSpy().and.callFake(function () {
+                if(!doneCalled) {
+                    doneCalled = true;
+                    done();
+                }
             });
-            var listener2 = jasmine.createSpy().and.callFake(function () {
-                done();
+            let listener2 = jasmine.createSpy().and.callFake(function () {
+                if(!doneCalled) {
+                    doneCalled = true;
+                    done();
+                }
             });
             $el.on('click', listener);
             $el.on('click', listener2);
@@ -181,18 +227,28 @@ function _test ($,jquery) {
             click(document.getElementById("myelement"));
             expect(listener).not.toHaveBeenCalled();
             expect(listener2).not.toHaveBeenCalled();
-            setTimeout(function() {done()},20);
+            setTimeout(function() {if(!doneCalled) {
+                doneCalled = true;
+                done();
+            }},20);
         });
 
         it("remove listeners works with namespace", function (done) {
-            var $el = $('#myelement');
-            var listener = jasmine.createSpy().and.callFake(function () {
+            let $el = $('#myelement');
+            let doneCalled = false;
+            let listener = jasmine.createSpy().and.callFake(function () {
                 expect(this).toBe($el[0]);
-                done();
+                if(!doneCalled) {
+                    doneCalled = true;
+                    done();
+                }
             });
-            var listener2 = jasmine.createSpy().and.callFake(function () {
+            let listener2 = jasmine.createSpy().and.callFake(function () {
                 expect(this).toBe($el[0]);
-                done();
+                if(!doneCalled) {
+                    doneCalled = true;
+                    done();
+                }
             });
             $el.on('click.myNamespace', listener);
             $el.on('click.myNamespace', listener2);
@@ -200,16 +256,26 @@ function _test ($,jquery) {
             click(document.getElementById("myelement"));
             expect(listener).not.toHaveBeenCalled();
             expect(listener2).toHaveBeenCalled();
-            setTimeout(function() {done()},20);
+            setTimeout(function() {if(!doneCalled) {
+                doneCalled = true;
+                done();
+            }},20);
         });
 
         it("remove all namespaced listeners works", function (done) {
-            var $el = $('#myelement');
-            var listener = jasmine.createSpy().and.callFake(function () {
-                done();
+            let $el = $('#myelement');
+            let doneCalled = false;
+            let listener = jasmine.createSpy().and.callFake(function () {
+                if(!doneCalled) {
+                    doneCalled = true;
+                    done();
+                }
             });
-            var listener2 = jasmine.createSpy().and.callFake(function () {
-                done();
+            let listener2 = jasmine.createSpy().and.callFake(function () {
+                if(!doneCalled) {
+                    doneCalled = true;
+                    done();
+                }
             });
             $el.on('click.myNamespace', listener);
             $el.on('click.myNamespace', listener2);
@@ -217,16 +283,26 @@ function _test ($,jquery) {
             click(document.getElementById("myelement"));
             expect(listener).not.toHaveBeenCalled();
             expect(listener2).not.toHaveBeenCalled();
-            setTimeout(function() {done()},20);
+            setTimeout(function() {if(!doneCalled) {
+                doneCalled = true;
+                done();
+            }},20);
         });
 
         it("mix namespace", function (done) {
-            var $el = $('#myelement');
-            var listener = jasmine.createSpy().and.callFake(function () {
-                done();
+            let $el = $('#myelement');
+            let doneCalled = false;
+            let listener = jasmine.createSpy().and.callFake(function () {
+                if(!doneCalled) {
+                    doneCalled = true;
+                    done();
+                }
             });
-            var listener2 = jasmine.createSpy().and.callFake(function () {
-                done();
+            let listener2 = jasmine.createSpy().and.callFake(function () {
+                if(!doneCalled) {
+                    doneCalled = true;
+                    done();
+                }
             });
             $el.on('click.myNamespace', listener);
             $el.on('click.myNamespace', listener2);
@@ -234,16 +310,26 @@ function _test ($,jquery) {
             click(document.getElementById("myelement"));
             expect(listener).not.toHaveBeenCalled();
             expect(listener2).not.toHaveBeenCalled();
-            setTimeout(function() {done()},20);
+            setTimeout(function() {if(!doneCalled) {
+                doneCalled = true;
+                done();
+            }},20);
         });
 
         it("off events without namespace should off namespaced events", function (done) {
-            var $el = $('#myelement');
-            var listener = jasmine.createSpy().and.callFake(function () {
-                done();
+            let $el = $('#myelement');
+            let doneCalled = false;
+            let listener = jasmine.createSpy().and.callFake(function () {
+                if(!doneCalled) {
+                    doneCalled = true;
+                    done();
+                }
             });
-            var listener2 = jasmine.createSpy().and.callFake(function () {
-                done();
+            let listener2 = jasmine.createSpy().and.callFake(function () {
+                if(!doneCalled) {
+                    doneCalled = true;
+                    done();
+                }
             });
             $el.on('click.myNamespace', listener);
             $el.on('click.myNamespace', listener2);
@@ -251,38 +337,62 @@ function _test ($,jquery) {
             click(document.getElementById("myelement"));
             expect(listener).not.toHaveBeenCalled();
             expect(listener2).not.toHaveBeenCalled();
-            setTimeout(function() {done()},20);
+            setTimeout(function() {if(!doneCalled) {
+                doneCalled = true;
+                done();
+            }},20);
         });
 
         it("off namespaced delegated event", function (done) {
-            var listener = jasmine.createSpy().and.callFake(function () {
-                done();
+            let doneCalled = false;
+            let listener = jasmine.createSpy().and.callFake(function () {
+                if(!doneCalled) {
+                    doneCalled = true;
+                    done();
+                }
             });
-            var $body = $('#test_container');
+            let $body = $('#test_container');
             $body.on('click.myNamespace','#myelement', listener);
             $body.off('.myNamespace');
             click(document.getElementById("myelement"));
             expect(listener).not.toHaveBeenCalled();
-            setTimeout(function() {done()},20);
+            setTimeout(function() {if(!doneCalled) {
+                doneCalled = true;
+                done();
+            }},20);
         });
         it("off should Remove all delegated click handlers", function (done) {
-            var listener = jasmine.createSpy().and.callFake(function () {
-                done();
+            let doneCalled = false;
+            let listener = jasmine.createSpy().and.callFake(function () {
+                if(!doneCalled) {
+                    doneCalled = true;
+                    done();
+                }
             });
-            var $body = $('#test_container');
+            let $body = $('#test_container');
             $body.on('click','#myelement', listener);
             $body.off('click', "**");
             click(document.getElementById("myelement"));
             expect(listener).not.toHaveBeenCalled();
-            setTimeout(function() {done()},20);
+            setTimeout(function() {if(!doneCalled) {
+                doneCalled = true;
+                done();
+            }},20);
         });
         it("remove listeners works with namespace without callback", function (done) {
-            var $el = $('#myelement');
-            var listener = jasmine.createSpy().and.callFake(function () {
-                done();
+            let doneCalled = false;
+            let $el = $('#myelement');
+            let listener = jasmine.createSpy().and.callFake(function () {
+                if(!doneCalled) {
+                    doneCalled = true;
+                    done();
+                }
             });
-            var listener2 = jasmine.createSpy().and.callFake(function () {
-                done();
+            let listener2 = jasmine.createSpy().and.callFake(function () {
+                if(!doneCalled) {
+                    doneCalled = true;
+                    done();
+                }
             });
             $el.on('click.myNamespace', listener);
             $el.on('click.myNamespace', listener2);
@@ -290,53 +400,71 @@ function _test ($,jquery) {
             click(document.getElementById("myelement"));
             expect(listener).not.toHaveBeenCalled();
             expect(listener2).not.toHaveBeenCalled();
-            setTimeout(function() {done()},20);
+            setTimeout(function() {if(!doneCalled) {
+                doneCalled = true;
+                done();
+            }},20);
         });
 
         it("live listeners works", function (done) {
-            var listener = jasmine.createSpy().and.callFake(function () {
+            let doneCalled = false;
+            let listener = jasmine.createSpy().and.callFake(function () {
                 expect(this).toBe(document.getElementById("myelement"));
                 done();
             });
-            var $body = $('#test_container');
+            let $body = $('#test_container');
             expect($body.on('click','#myelement', listener)).toBe($body);
             click(document.getElementById("myelement"));
             expect(listener).toHaveBeenCalled();
         });
 
         it("live listeners do not fire on root element", function (done) {
-            var listener = jasmine.createSpy().and.callFake(function () {
-                done();
+            let doneCalled = false;
+            let listener = jasmine.createSpy().and.callFake(function () {
+                if(!doneCalled) {
+                    doneCalled = true;
+                    done();
+                }
             });
-            var $body = $('#test_container');
+            let $body = $('#test_container');
             expect($body.on('click','#myelement', listener)).toBe($body);
             click(document.getElementById("test_container"));
             expect(listener).not.toHaveBeenCalled();
-            setTimeout(function() {done()},20);
+            setTimeout(function() {if(!doneCalled) {
+                doneCalled = true;
+                done();
+            }},20);
         });
 
         it("live listeners do not fire on any other element", function (done) {
-            var listener = jasmine.createSpy().and.callFake(function () {
-                done();
+            let doneCalled = false;
+            let listener = jasmine.createSpy().and.callFake(function () {
+                if(!doneCalled) {
+                    doneCalled = true;
+                    done();
+                }
             });
-            var $body = $('#test_container');
-            var $other = $('<div/>').attr("id","other_el");
+            let $body = $('#test_container');
+            let $other = $('<div/>').attr("id","other_el");
             $body.append($other);
             expect($body.on('click','#myelement', listener)).toBe($body);
             click($other[0]);
             expect(listener).not.toHaveBeenCalled();
-            setTimeout(function() {done()},20);
+            setTimeout(function() {if(!doneCalled) {
+                doneCalled = true;
+                done();
+            }},20);
         });
 
         it("live listeners stoppropagation should works", function (done) {
-            var listener = jasmine.createSpy().and.callFake(function () {
+            let listener = jasmine.createSpy().and.callFake(function () {
                 // done();
             });
-            var listener2 = jasmine.createSpy().and.callFake(function () {
+            let listener2 = jasmine.createSpy().and.callFake(function () {
                 // done();
             });
-            var $body = $('#test_container');
-            var $other = $('<div/>').attr("id","other_el");
+            let $body = $('#test_container');
+            let $other = $('<div/>').attr("id","other_el");
             $body.append($other);
 
             $body.on('click', listener2);
@@ -351,15 +479,16 @@ function _test ($,jquery) {
         });
 
         it("live listeners stoppropagation should works with element inside element", function (done) {
-            var listener = jasmine.createSpy().and.callFake(function () {
+            let doneCalled = false;
+            let listener = jasmine.createSpy().and.callFake(function () {
                 // done();
             });
-            var listener2 = jasmine.createSpy().and.callFake(function () {
+            let listener2 = jasmine.createSpy().and.callFake(function () {
                 // done();
             });
-            var $body = $('#test_container');
-            var $other = $('<div/>').attr("id","other_el");
-            var $other2 = $('<div/>').attr("id","other_el2");
+            let $body = $('#test_container');
+            let $other = $('<div/>').attr("id","other_el");
+            let $other2 = $('<div/>').attr("id","other_el2");
             $body.append($other);
             $other.append($other2);
 
@@ -381,46 +510,66 @@ function _test ($,jquery) {
         });
 
         it("remove live listeners works", function (done) {
-            var listener = jasmine.createSpy().and.callFake(function () {
+            let doneCalled = false;
+            let listener = jasmine.createSpy().and.callFake(function () {
                 expect(this).toBe(document.getElementById("myelement"));
-                done();
+                if(!doneCalled) {
+                    doneCalled = true;
+                    done();
+                }
             });
-            var listener2 = jasmine.createSpy().and.callFake(function () {
+            let listener2 = jasmine.createSpy().and.callFake(function () {
                 expect(this).toBe(document.getElementById("myelement"));
-                done();
+                if(!doneCalled) {
+                    doneCalled = true;
+                    done();
+                }
             });
-            var $body = $('#test_container');
+            let $body = $('#test_container');
             $body.on('click','#myelement', listener);
             $body.on('click','#myelement', listener2);
             $body.off('click','#myelement', listener);
             click(document.getElementById("myelement"));
             expect(listener).not.toHaveBeenCalled();
             expect(listener2).toHaveBeenCalled();
-            setTimeout(function() {done()},20);
+            setTimeout(function() {if(!doneCalled) {
+                doneCalled = true;
+                done();
+            }},20);
         });
 
         it("remove live listeners works generic", function (done) {
-            var listener = jasmine.createSpy().and.callFake(function () {
+            let doneCalled = false;
+            let listener = jasmine.createSpy().and.callFake(function () {
                 expect(this).toBe(document.getElementById("myelement"));
-                done();
+                if(!doneCalled) {
+                    doneCalled = true;
+                    done();
+                }
             });
-            var listener2 = jasmine.createSpy().and.callFake(function () {
+            let listener2 = jasmine.createSpy().and.callFake(function () {
                 expect(this).toBe(document.getElementById("myelement"));
-                done();
+                if(!doneCalled) {
+                    doneCalled = true;
+                    done();
+                }
             });
-            var $body = $('#test_container');
+            let $body = $('#test_container');
             $body.on('click','#myelement', listener);
             $body.on('click','#myelement', listener2);
             $body.off('click','#myelement');
             click(document.getElementById("myelement"));
             expect(listener).not.toHaveBeenCalled();
             expect(listener2).not.toHaveBeenCalled();
-            setTimeout(function() {done()},20);
+            setTimeout(function() {if(!doneCalled) {
+                doneCalled = true;
+                done();
+            }},20);
         });
 
 
         it("class methods works", function () {
-            var $el = $('#myelement');
+            let $el = $('#myelement');
 
             expect($el.addClass("myClass")).toBe($el);
             expect($el[0].className).toBe("myClass");
@@ -450,7 +599,7 @@ function _test ($,jquery) {
         });
 
         it("html and empty works", function() {
-            var $el = $('#myelement');
+            let $el = $('#myelement');
 
             expect($el.html("Hello World")).toBe($el);
 
@@ -464,16 +613,23 @@ function _test ($,jquery) {
             expect($el.html()).toBe("");
         });
 
+        it("html should exec script inside it", function() {
+            let $el = $('#myelement');
+            $el.html("<script>$('#myelement').attr('data-script','1')</script>")
+            expect($el.attr('data-script')).toBe("1");
+
+        });
+
         it("parent() should works", function() {
-            var $el = $('#myelement');
-            var $parent = $el.parent();
+            let $el = $('#myelement');
+            let $parent = $el.parent();
             expect($parent instanceof $).toBeTruthy();
             expect($parent.length).toBe(1);
             expect($parent[0]).toBe(document.getElementById("test_container"));
 
-            var $newDiv = $('<div/>');
+            let $newDiv = $('<div/>');
             $el.append($newDiv);
-            var $parentEl = $newDiv.parent();
+            let $parentEl = $newDiv.parent();
             expect($parentEl[0]).toBe($el[0]);
 
             expect($newDiv.parent().parent()[0]).toBe(document.getElementById("test_container"))
@@ -481,27 +637,40 @@ function _test ($,jquery) {
         });
 
         it("set and get attributes should work", function() {
-            var $el = $('#myelement');
+            let $el = $('#myelement');
 
             $el.attr("data-myattr", "myvalue");
 
             expect($el.attr('data-myattr')).toBe("myvalue");
 
         });
+        it("removeAttr should work", function() {
+            let $el = $('#myelement');
+
+            $el.attr("data-myattr", "myvalue");
+            $el.removeAttr('data-myattr')
+
+            expect($el.attr('data-myattr')).toEqual(undefined);
+
+        });
 
 
         it("clone should works", function() {
-            var $el = $('#myelement');
+            let $el = $('#myelement');
             $el.addClass("another-class");
-            var $clone = $el.clone();
+            let $clone = $el.clone();
             expect($clone).not.toBe($el);
             expect($clone.hasClass("another-class")).toBeTruthy();
         });
 
         it("stopPropagation should works", function(done) {
-            var $el =$('#myelement');
-            var listener = jasmine.createSpy().and.callFake(function () {
-                done();
+            let $el =$('#myelement');
+            let doneCalled = false;
+            let listener = jasmine.createSpy().and.callFake(function () {
+                if(!doneCalled) {
+                    doneCalled = true;
+                    done();
+                }
             });
             $el.on('click', function(e) {
                 e.stopPropagation();
@@ -509,15 +678,22 @@ function _test ($,jquery) {
             document.body.addEventListener('click', listener);
             expect(listener).not.toHaveBeenCalled();
             setTimeout(function() {
-                done();
+                if(!doneCalled) {
+                    doneCalled = true;
+                    done();
+                }
             },100);
             click($el[0]);
         });
 
         it("return false on listener should works", function(done) {
-            var $el =$('#myelement');
-            var listener = jasmine.createSpy().and.callFake(function () {
-                done();
+            let $el =$('#myelement');
+            let doneCalled = false;
+            let listener = jasmine.createSpy().and.callFake(function () {
+                if(!doneCalled) {
+                    doneCalled = true;
+                    done();
+                }
             });
             $el.on('click', function() {
                 return false
@@ -525,28 +701,32 @@ function _test ($,jquery) {
             document.body.addEventListener('click', listener);
             expect(listener).not.toHaveBeenCalled();
             setTimeout(function() {
-                done();
+                if(!doneCalled) {
+                    doneCalled = true;
+                    done();
+                }
             },100);
             click($el[0]);
         });
 
         it("get() works", function() {
-            var $el = $('#myelement');
+            let $el = $('#myelement');
             expect($el.get(0)).toBe($el[0]);
             expect($el.get(-1)).toBe($el[0]);
 
-            var $body = $('#test_container');
+            let $body = $('#test_container');
             $body.append($('<div/>').addClass("get-class"));
             $body.append($('<div/>').addClass("get-class"));
-            var $target = $('<div/>').addClass("get-class");
+            let $target = $('<div/>').addClass("get-class");
             $body.append($target);
 
             expect($body.find('.get-class').get(-1)).toBe($target[0]);
-        })
+        });
+
     });
 
     describe("test multiple elements", function() {
-        var $firstDiv, $secondDiv;
+        let $firstDiv, $secondDiv;
         beforeEach(function () {
             $('#test_container').remove();
             $('body').append($('<div/>').attr("id","test_container"));
