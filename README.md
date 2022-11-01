@@ -3,7 +3,7 @@
 
 ## What
 
-This is a tiny (3kB minified) and IE9+ compatible library to interact with the DOM using a jQuery-like syntax.
+This is a tiny (4kB minified) and IE9+ compatible library to interact with the DOM using a jQuery-like syntax.
 
 ## Why
 
@@ -11,7 +11,7 @@ I love jQuery. But sometimes I only need to do a few things
 using a chainable|comfortable syntax. Frameworks like Angular, React or Vuejs may be
 oversized for a simple page with little interactivity.
 
-In this case jquasi might help. With this **3kB** library you can do something like this:
+In this case jquasi might help. With this **4kB** library you can do something like this:
 
 ```
 
@@ -64,8 +64,13 @@ The API is a subset of the jQuery API.
 - remove namespaced events `$('body').off('.my-custom-namespace')`
 - remove all delegated event handlers `$('body').off('click', '**')`
 - `.fn` as `prototype` shortcut
-- <strike>`.css()`</strike> is not available because it would be hard to keep jquery
-compatibility without making the library much bigger
+
+From 2.0
+
+- `.html(content)` supports now script tag execution.
+- `.attr(name)` returns `undefined` rather than `null` respecting jQuery compatibility
+- `.css()` for simple a minimal styling
+- removeAttr: `$('div').removeAttr("data-attr")`
 
 This API is a good balance of lightness and power.
 
@@ -75,10 +80,8 @@ If you are missing just a few methods and don't want to switch from jquasi to jQ
 you can extend jquasi within your project as shown in this example:
 
 ```
-$.fn.css = function(attr, value) {
-    return this.each(function() { 
-        this.style[attr] = value;
-    });
+$.fn.myMissingFunc = function() {
+    // do stuff here
 }
 
 $('div').css("backgroundColor","red");
