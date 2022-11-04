@@ -1,4 +1,5 @@
 sudo: required
+dist: focal
 addons:
   chrome: stable
 language: node_js

@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/LucaRainone/jquasi.svg?branch=master)](https://travis-ci.org/LucaRainone/jquasi)
+[![Build Status](https://app.travis-ci.com/LucaRainone/jquasi.svg?branch=master)](https://travis-ci.org/LucaRainone/jquasi)
 [![Coverage Status](https://coveralls.io/repos/github/LucaRainone/jquasi/badge.svg?branch=master)](https://coveralls.io/github/LucaRainone/jquasi?branch=master)
 
 ## What
