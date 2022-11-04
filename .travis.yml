@@ -6,7 +6,7 @@ env:
 - SENDCOVERALLS=1
 
 node_js:
-  - "node"
+  - 18
 
 install:
 - npm install

@@ -84,7 +84,7 @@ $.fn.myMissingFunc = function() {
     // do stuff here
 }
 
-$('div').css("backgroundColor","red");
+$('div').myMissingFunc(/* arguments */);
 ```
 
 ## Contributing
